@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // No slideshow or intro video is rendered on app open.
   updateInlineStats();
   renderCategories();
+  updateHomepageProductCount();
   await renderShops();
   renderFeaturedProducts();
   startSellerShowcase();
@@ -118,6 +119,19 @@ async function updateInlineStats() {
   } catch (e) {
     console.error(e);
     listingEl.textContent = '0+';
+  }
+}
+
+async function updateHomepageProductCount() {
+  const countEl = document.getElementById('homepage-product-count');
+  if (!countEl || typeof fetchHeroStats !== 'function') return;
+
+  try {
+    const stats = await fetchHeroStats();
+    const count = Number(stats?.productCount || 0);
+    countEl.textContent = `${count.toLocaleString()} product${count === 1 ? '' : 's'} listed`;
+  } catch (error) {
+    countEl.textContent = 'Product listings available now';
   }
 }
 
@@ -287,22 +301,30 @@ const CATEGORIES = [
 
 function renderCategories() {
   const container = document.getElementById('categories-container');
-  container.innerHTML = CATEGORIES.map(cat => {
-    const isHousing = cat.name === 'Houses & Rents';
-    const href = isHousing ? 'houses-rent.html' : `products.html?category=${encodeURIComponent(cat.name)}`;
-    const extraClass = isHousing ? ' category-card-special' : '';
-    const badge = isHousing ? '<span class="category-badge">Special</span>' : '';
+  if (!container) return;
 
-    const target = isHousing ? ' target="_blank" rel="noopener"' : '';
+  container.innerHTML = `
+    <label class="sr-only" for="homepage-category-filter">Choose a listing category</label>
+    <div class="homepage-filter-control">
+      <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+      <select id="homepage-category-filter">
+        <option value="">All listings</option>
+        ${CATEGORIES.map(cat => `<option value="${cat.name}">${cat.name}</option>`).join('')}
+      </select>
+      <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+    </div>
+  `;
 
-    return `
-      <a href="${href}" class="category-card${extraClass}"${target}>
-        <i class="${cat.icon} category-icon"></i>
-        <span class="category-name">${cat.name}</span>
-        ${badge}
-      </a>
-    `;
-  }).join('');
+  const filter = document.getElementById('homepage-category-filter');
+  filter.addEventListener('change', () => {
+    if (filter.value === 'Houses & Rents') {
+      window.location.href = 'houses-rent.html';
+      return;
+    }
+
+    const query = filter.value ? `?category=${encodeURIComponent(filter.value)}` : '';
+    window.location.href = `products.html${query}`;
+  });
 }
 
 async function renderHeroSection() {

@@ -639,47 +639,55 @@
 <body>
   <div id="site-header-root"></div>
   <main>
-    <!-- ===== Modern Commerce Hero ===== -->
-    <section class="hero-section" id="home-slideshow">
-      <div class="hero-inner">
-        <div class="hero-left">
-          <h1 class="hero-headline">
-            Buy Easy. Sell Smart.
-          </h1>
-
-          <p class="hero-subtitle">
-            Buy what you need, sell what you have, and discover electronics, fashion, cars &amp; more from local sellers across Rwanda.
-          </p>
-
-          <div class="hero-listing-count" aria-live="polite">
-            <span class="hero-listing-number" id="stat-active-listings">0+</span>
-            <span class="hero-listing-label">Available listings</span>
+    <section class="hero-marketplace" id="home-slideshow">
+      <div class="hero-marketplace-grid">
+        <div class="hero-marketplace-copy">
+          <div class="hero-eyebrow"><span></span> Rwanda's everyday marketplace</div>
+          <h1>Good finds.<br><em>Real people.</em><br>Right here.</h1>
+          <p class="hero-marketplace-subtitle">Shop trusted local listings, discover your next favorite thing, or turn what you no longer need into cash.</p>
+          <form class="hero-marketplace-search" action="products.html" method="get">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="search" name="search" placeholder="What are you looking for?" aria-label="Search listings">
+            <button type="submit">Explore <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+          </form>
+          <div class="hero-marketplace-actions">
+            <a href="sell.html" class="hero-action-link hero-action-link-primary"><i class="fa-solid fa-plus"></i> List an item</a>
+            <a href="houses-rent.html" class="hero-action-link"><i class="fa-solid fa-house"></i> Find a home</a>
           </div>
-
-          <div class="hero-actions">
-            <a href="products.html" class="hero-btn-primary">Start Shopping</a>
-            <a href="sell.html" class="hero-btn-secondary">Start Selling</a>
+          <div class="hero-proof-row">
+            <div class="hero-proof-item"><strong id="stat-active-listings">0+</strong><span>active listings</span></div>
+            <div class="hero-proof-divider"></div>
+            <div class="hero-proof-item"><strong>100%</strong><span>local discovery</span></div>
+            <div class="hero-proof-divider"></div>
+            <div class="hero-proof-item"><strong><i class="fa-solid fa-shield-heart"></i></strong><span>made for trust</span></div>
           </div>
-
         </div>
-
-        <div class="hero-right">
-          <div class="hero-media-card">
+        <div class="hero-marketplace-visual">
+          <div class="hero-visual-orbit hero-visual-orbit-one"></div>
+          <div class="hero-visual-orbit hero-visual-orbit-two"></div>
+          <div class="hero-media-frame">
+            <div class="hero-media-topline"><span><i class="fa-solid fa-location-dot"></i> Kigali &amp; beyond</span><span class="hero-live-dot">Live marketplace</span></div>
             <video class="hero-media-video" src="assets/hero.mp4" autoplay muted loop playsinline preload="metadata"></video>
-            <div class="hero-video-end-screen" id="hero-video-end-screen" aria-hidden="true">
-              <div class="hero-video-end-text">Buy what you need.<br>Sell what you have.</div>
-            </div>
+            <div class="hero-media-caption"><span class="hero-caption-icon"><i class="fa-solid fa-bag-shopping"></i></span><span><strong>Find something worth keeping.</strong><small>From your neighborhood to your doorstep.</small></span><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
           </div>
+          <div class="hero-floating-note hero-floating-note-top"><i class="fa-solid fa-bolt"></i><span><strong>Fresh listings</strong><small>added every day</small></span></div>
+          <div class="hero-floating-note hero-floating-note-bottom"><i class="fa-solid fa-handshake"></i><span><strong>Buy with confidence</strong><small>connect locally</small></span></div>
         </div>
       </div>
     </section>
 
 
     <div class="container">
-      <h2 class="section-title">Browse Categories</h2>
-      <div class="categories-grid" id="categories-container">
-        <!-- JS will render categories here -->
-      </div>
+      <section class="homepage-filter" aria-labelledby="homepage-filter-title">
+        <div>
+          <span class="homepage-filter-kicker">Find your next thing</span>
+          <h2 class="section-title" id="homepage-filter-title">Filter listings</h2>
+          <p class="homepage-product-count" id="homepage-product-count" aria-live="polite">Loading listed products...</p>
+        </div>
+        <div id="categories-container">
+          <!-- JS will render the category filter here -->
+        </div>
+      </section>
 
       <div class="shops-section" hidden>
         <h2 class="section-title">Featured Shops</h2>

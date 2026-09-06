@@ -477,19 +477,13 @@ function setupInstallPrompt() {
   }
 
   window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
     pwaDeferredPrompt = event;
-    showInstallBanner();
   });
 
   window.addEventListener('appinstalled', () => {
     hideInstallBanner();
   });
-
-  if (!isInStandaloneMode() && !installPromptDismissed) {
-    setTimeout(() => {
-      showInstallBanner();
-    }, 1400);
-  }
 
   window.showInstallPrompt = async () => {
     closeInstallGuideModal();
@@ -605,6 +599,7 @@ function setupStickyHeader() {
 
   let ticking = false;
   let lastScrollY = window.scrollY;
+  const mobileBottomNav = document.querySelector('.mobile-bottom-nav');
 
   const updateHeaderState = () => {
     const currentScrollY = window.scrollY;
@@ -614,6 +609,11 @@ function setupStickyHeader() {
 
     navbar.classList.toggle('scrolled', shouldScroll);
     navbar.classList.toggle('is-hidden', shouldHide && !shouldShow);
+
+    if (mobileBottomNav) {
+      const isMobile = window.innerWidth <= 768;
+      mobileBottomNav.classList.toggle('is-hidden', isMobile && shouldHide && !shouldShow);
+    }
 
     const isSmall = window.innerWidth <= 480;
     const isTablet = window.innerWidth <= 768;
@@ -759,21 +759,12 @@ function renderNavbar() {
         </form>
 
         <div class="navbar-actions">
-          <a href="sell.html" class="nav-action-item sell-header-btn" style="display:none;">
-            <i class="fa-solid fa-bag-shopping"></i>
-            <strong>Sell</strong>
-          </a>
           <a href="${accountHref}" class="nav-action-item" ${accountClickHandler ? `onclick="${accountClickHandler}"` : ''}>
             <span>Hello, ${user ? user.name : 'Sign in'}</span>
             <strong>Account</strong>
           </a>
 
           ${isAdminPage ? '' : `
-          <a href="houses-rent.html" target="_blank" rel="noopener" class="nav-action-item mobile-househub-link">
-            <i class="fa-solid fa-house"></i>
-            <strong>Househub</strong>
-          </a>
-
           ${showInstallAction ? `
           <button type="button" class="nav-action-item install-nav-btn" onclick="showInstallPrompt()">
             <i class="fa-solid fa-download"></i>
@@ -792,7 +783,6 @@ function renderNavbar() {
         </div>
       </div>
 
-      <!-- Bottom Tier: Categories -->
       ${isAdminPage ? '' : `
       <div class="navbar-bottom">
         <a href="houses-rent.html" target="_blank" rel="noopener" style="color: #b45309; font-weight: 700; background: #fff7ed; padding: 0.3rem 0.7rem; border-radius: 999px; border: 1px solid #fdba74;">HOUSEHUB</a>
@@ -800,6 +790,16 @@ function renderNavbar() {
       </div>
       `}
     </nav>
+
+    ${isAdminPage ? '' : `
+    <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+      <a href="index.html" class="mobile-bottom-nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+      <a href="#" class="mobile-bottom-nav-item cart-icon"><i class="fa-solid fa-cart-shopping"></i><span>Cart</span><b class="cart-count">0</b></a>
+      <a href="houses-rent.html" class="mobile-bottom-nav-item"><i class="fa-solid fa-building"></i><span>HouseHub</span></a>
+      <a href="sell.html" class="mobile-bottom-nav-item"><i class="fa-solid fa-tag"></i><span>Sell</span></a>
+      <a href="${accountHref}" class="mobile-bottom-nav-item" ${accountClickHandler ? `onclick="${accountClickHandler}"` : ''}><i class="fa-solid fa-user"></i><span>Account</span></a>
+    </nav>
+    `}
 
     <!-- Side Navigation Drawer (Amazon Style) -->
     <div class="side-drawer-overlay" id="side-drawer-overlay"></div>
@@ -1212,17 +1212,17 @@ renderNavbar = function() {
   document.body.insertAdjacentHTML('beforeend', cartDrawerHTML);
   
   // Link Cart Icon Trigger
-  const cartTrigger = document.querySelector('.cart-icon');
+  const cartTriggers = document.querySelectorAll('.cart-icon');
   const closeCart = document.getElementById('close-cart');
   const cartDrawer = document.getElementById('cart-drawer');
   const overlay = document.getElementById('side-drawer-overlay');
   
-  if (cartTrigger) {
+  cartTriggers.forEach((cartTrigger) => {
     cartTrigger.addEventListener('click', (e) => {
       e.preventDefault();
       openCartDrawer();
     });
-  }
+  });
   
   const closeAllDrawers = () => {
     cartDrawer.classList.remove('active');
